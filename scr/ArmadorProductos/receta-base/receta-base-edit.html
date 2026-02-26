@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar receta base – Armador de Productos</title>
+    <link rel="stylesheet" href="../armador-layout.css">
+    <link rel="stylesheet" href="receta-base.css">
+</head>
+<body class="armador-page">
+    <header class="armador-page-header">
+        <a href="receta-base.html" class="armador-page-back">← Receta base</a>
+        <h1 class="armador-page-title">Editar receta base</h1>
+        <div class="armador-page-actions" id="link-detalle-wrap"></div>
+    </header>
+    <main class="armador-page-main">
+        <div id="armador-msg" class="armador-msg" style="display: none;"></div>
+        <div id="armador-loading" class="armador-loading">Cargando…</div>
+        <form id="form-receta-base" class="armador-form" style="display: none;">
+            <div class="armador-form-group">
+                <label>ID</label>
+                <input type="text" id="IDReceta-Base" name="IDReceta-Base" readonly disabled>
+            </div>
+            <div class="armador-form-group">
+                <label for="Descripcion-Masa-Producto">Descripción masa / producto</label>
+                <input type="text" id="Descripcion-Masa-Producto" name="Descripcion-Masa-Producto">
+            </div>
+            <div class="armador-form-group">
+                <label for="Costo-Directo-Receta">Costo directo receta</label>
+                <input type="number" id="Costo-Directo-Receta" name="Costo-Directo-Receta" step="0.01">
+            </div>
+            <div class="armador-form-group">
+                <label for="Tiempo-Produccion-Minutos">Tiempo producción (min)</label>
+                <input type="number" id="Tiempo-Produccion-Minutos" name="Tiempo-Produccion-Minutos">
+            </div>
+            <div class="armador-form-group">
+                <label for="Costo-Mano-Obra-Produccion">Costo mano de obra producción</label>
+                <input type="number" id="Costo-Mano-Obra-Produccion" name="Costo-Mano-Obra-Produccion" step="0.01">
+            </div>
+            <div class="armador-form-group">
+                <label for="Rendimiento-Cantidad">Rendimiento cantidad</label>
+                <input type="number" id="Rendimiento-Cantidad" name="Rendimiento-Cantidad" step="0.01">
+            </div>
+            <div class="armador-form-group">
+                <label for="Rendimiento-UnidadMedida">Rendimiento unidad medida</label>
+                <input type="text" id="Rendimiento-UnidadMedida" name="Rendimiento-UnidadMedida">
+            </div>
+            <div class="armador-form-actions">
+                <button type="submit" class="armador-btn armador-btn-primary">Guardar</button>
+                <a href="receta-base.html" class="armador-btn armador-btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </main>
+    <script src="../../Configuracion/config.js"></script>
+    <script src="../armador-api.js"></script>
+    <script src="receta-base-edit.js"></script>
+</body>
+</html>

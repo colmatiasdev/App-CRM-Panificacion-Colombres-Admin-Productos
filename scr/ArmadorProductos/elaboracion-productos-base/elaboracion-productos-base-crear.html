@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva elaboración productos base – Armador de Productos</title>
+    <link rel="stylesheet" href="../armador-layout.css">
+    <link rel="stylesheet" href="elaboracion-productos-base.css">
+</head>
+<body class="armador-page">
+    <header class="armador-page-header">
+        <a href="elaboracion-productos-base.html" class="armador-page-back">← Elaboración productos base</a>
+        <h1 class="armador-page-title">Nueva elaboración productos base</h1>
+    </header>
+    <main class="armador-page-main">
+        <div id="armador-msg" class="armador-msg" style="display: none;"></div>
+        <form id="form-elab" class="armador-form">
+            <div class="armador-form-group">
+                <label for="IDReceta-Base">Receta base</label>
+                <select id="IDReceta-Base" name="IDReceta-Base" required></select>
+            </div>
+            <div class="armador-form-group">
+                <label for="Cantidad">Cantidad</label>
+                <input type="number" id="Cantidad" name="Cantidad" step="0.01">
+            </div>
+            <div class="armador-form-group">
+                <label for="Costo-Produccion-ProductoBase">Costo producción producto base</label>
+                <input type="number" id="Costo-Produccion-ProductoBase" name="Costo-Produccion-ProductoBase" step="0.0001">
+            </div>
+            <div class="armador-form-group">
+                <label for="Monto">Monto</label>
+                <input type="number" id="Monto" name="Monto" step="0.01">
+            </div>
+            <div class="armador-form-actions">
+                <button type="submit" class="armador-btn armador-btn-primary">Guardar</button>
+                <a href="elaboracion-productos-base.html" class="armador-btn armador-btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </main>
+    <script src="../../Configuracion/config.js"></script>
+    <script src="../armador-api.js"></script>
+    <script src="elaboracion-productos-base-crear.js"></script>
+</body>
+</html>

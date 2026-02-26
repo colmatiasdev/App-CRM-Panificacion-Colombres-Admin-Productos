@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva línea detalle receta – Armador de Productos</title>
+    <link rel="stylesheet" href="../armador-layout.css">
+    <link rel="stylesheet" href="receta-base.css">
+</head>
+<body class="armador-page">
+    <header class="armador-page-header">
+        <a href="#" id="back-link" class="armador-page-back">← Detalle receta</a>
+        <h1 class="armador-page-title">Nueva línea detalle receta</h1>
+    </header>
+    <main class="armador-page-main">
+        <div id="armador-msg" class="armador-msg" style="display: none;"></div>
+        <form id="form-detalle" class="armador-form">
+            <input type="hidden" id="IDReceta-Base" name="IDReceta-Base">
+            <div class="armador-form-group">
+                <label for="IDInsumo-MateriaPrima">Insumo materia prima</label>
+                <select id="IDInsumo-MateriaPrima" name="IDInsumo-MateriaPrima" required></select>
+            </div>
+            <div class="armador-form-group">
+                <label for="Nombre-Insumo">Nombre insumo</label>
+                <input type="text" id="Nombre-Insumo" name="Nombre-Insumo" readonly placeholder="Se completa al elegir un insumo">
+            </div>
+            <div class="armador-form-group">
+                <label for="Cantidad">Cantidad</label>
+                <input type="number" id="Cantidad" name="Cantidad" step="0.0001">
+            </div>
+            <div class="armador-form-group">
+                <label for="Unidad-Medida">Unidad medida</label>
+                <input type="text" id="Unidad-Medida" name="Unidad-Medida" placeholder="Se completa al elegir un insumo">
+            </div>
+            <div class="armador-form-group">
+                <label for="Precio-Equivalencia-x-Unidad">Precio equivalencia x unidad</label>
+                <input type="number" id="Precio-Equivalencia-x-Unidad" name="Precio-Equivalencia-x-Unidad" step="0.0001" placeholder="Se completa al elegir un insumo">
+            </div>
+            <div class="armador-form-actions">
+                <button type="submit" class="armador-btn armador-btn-primary">Guardar</button>
+                <a href="#" id="cancel-link" class="armador-btn armador-btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </main>
+    <script src="../../Configuracion/config.js"></script>
+    <script src="../armador-api.js"></script>
+    <script src="receta-base-detalle-crear.js"></script>
+</body>
+</html>

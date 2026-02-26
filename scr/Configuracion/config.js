@@ -42,6 +42,12 @@ window.APP_CONFIG = {
     /** URL del despliegue de Apps Script para menú, opciones, horarios, productos. */
     appsScriptMenuUrl: "https://script.google.com/macros/s/AKfycbz_4r2OozpaoAOYAJhNOiOjDRKYoVdJOQHisIkcyVgIjAzygl6f_anR6YqJfd8yNXGrSw/exec",
 
+    // ========== ARMADOR DE PRODUCTOS (ARQUITECTURA) ==========
+    /** URL del despliegue de Apps Script para Armador de Productos (Costos y Recetas). Ver scr/arquitectura/AppsScript-Armador-Productos.gs */
+    appsScriptArmadorProductosUrl: "https://script.google.com/macros/s/AKfycbwkJfPEe-VtwmgfYTcxeldQepTACvqbvQGuFj-dEuiRp97jxdojTou_SUKsCDcDFSPe9g/exec",
+    /** URL pública (pubhtml) de la planilla Armador de Productos publicada en la web. Documento público. */
+    armadorProductosSheetPublicUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2JjpQd3KVsdEw8AHvy4vYG9WOjRQl9-fcSXtif1mEbOmr3nWLOJj_TBRWBApV2qOGnEHN_MZGnH2Z/pubhtml",
+
     // ========== MENÚ – HOJAS DE CÁLCULO ==========
     /** URL CSV de la hoja del menú simple (opcional). La hoja menu-simple ya no existe; dejar vacío o usar solo menú compuesto. */
     googleSheetUrl: "",

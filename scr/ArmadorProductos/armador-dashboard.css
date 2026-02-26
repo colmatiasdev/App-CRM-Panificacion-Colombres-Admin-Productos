@@ -1,0 +1,89 @@
+/* Armador de Productos – Dashboard (tema claro) */
+:root {
+  --armador-bg: #f1f5f9;
+  --armador-card-bg: #ffffff;
+  --armador-accent: #0891b2;
+  --armador-text: #334155;
+  --armador-muted: #64748b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: var(--armador-bg);
+  color: var(--armador-text);
+  min-height: 100vh;
+}
+
+.armador-header {
+  background: var(--armador-card-bg);
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.armador-header-inner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.armador-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--armador-accent);
+}
+
+.armador-subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  color: var(--armador-muted);
+}
+
+.armador-main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.armador-nav {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.armador-card {
+  display: block;
+  padding: 1.25rem;
+  background: var(--armador-card-bg);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.armador-card:hover {
+  border-color: var(--armador-accent);
+  background: #f0fdfa;
+  box-shadow: 0 2px 8px rgba(8, 145, 178, 0.12);
+}
+
+.armador-card-title {
+  display: block;
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+  color: var(--armador-accent);
+}
+
+.armador-card-desc {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--armador-muted);
+  line-height: 1.4;
+}

@@ -1,0 +1,629 @@
+{
+  "nombre": "Armador de Productos - Costos y Recetas",
+  "origen": "Google Sheets",
+  "version": "1.1",
+  "descripcion": "Esquema relacional para Sheets / futura migración PostgreSQL. Incluye fórmulas, sumatorias, campos reflejo, generación de IDs, orden autogenerado, listas de valores, precisión decimal y navegación (menú y flujo). Origen: migración desde otra BD.",
+
+  "generacionId": {
+    "descripcion": "Reglas para crear PKs únicos; provienen de migración desde otra BD.",
+    "separador": "-",
+    "formatos": [
+      {
+        "id": "formato-prefijo-alfanumerico",
+        "descripcion": "Prefijo fijo + cadena alfanumérica única.",
+        "patron": "{prefijo}-{alfanumerico}",
+        "ejemplo": "PROD-COSTO-54asf34aa13a",
+        "generacion": {
+          "prefijo": "valor fijo por tabla",
+          "alfanumerico": "longitud variable, caracteres [0-9a-z] únicos por registro"
+        },
+        "aplicadoA": [
+          { "tabla": "Tabla-Costo-Productos", "pk": "IDCosto-Producto", "prefijo": "PROD-COSTO" },
+          { "tabla": "Tabla-Costos-ProductoUnitario", "pk": "IDCosto-ProductoUnitario", "prefijo": "CPU" },
+          { "tabla": "Tabla-Elaboracion-ProductosBase", "pk": "IDElaboracion-ProductoBase", "prefijo": "ELAB" },
+          { "tabla": "Tabla-Receta-Base", "pk": "IDReceta-Base", "prefijo": "REC" },
+          { "tabla": "Tabla-Receta-Base-Detalle", "pk": "IDReceta-Base-Detalle", "prefijo": "RBD" },
+          { "tabla": "Tabla-Receta-Relleno-Detalle", "pk": "IDReceta-Relleno", "prefijo": "RR" },
+          { "tabla": "Tabla-Receta-Decoracion-Detalle", "pk": "IDReceta-Decoracion", "prefijo": "RD" },
+          { "tabla": "Tabla-Packing", "pk": "IDPacking", "prefijo": "PKG" },
+          { "tabla": "Tabla-Packing-Detalle", "pk": "IDPacking-Detalle", "prefijo": "PD" },
+          { "tabla": "Tabla-Insumo-Materia-Prima", "pk": "IDInsumo-MateriaPrima", "prefijo": "IMP" },
+          { "tabla": "Tabla-Insumo-Packing", "pk": "IDInsumo-Packing", "prefijo": "IP" },
+          { "tabla": "Listado-Productos-Elaborados", "pk": "IDProducto", "prefijo": "PROD" }
+        ]
+      },
+      {
+        "id": "formato-id-alfanumerico-sufijo-numerico",
+        "descripcion": "ID + alfanumérico + guión + 4 dígitos numéricos aleatorios.",
+        "patron": "ID-{alfanumerico}-{4digitos}",
+        "ejemplo": "ID-zd1h654dhz4d4lh-6712",
+        "generacion": {
+          "prefijoFijo": "ID",
+          "alfanumerico": "cadena única",
+          "sufijoNumerico": "4 dígitos aleatorios (0-9)"
+        },
+        "aplicadoA": [
+          { "tabla": "Tabla-Costo-Productos-Compuesto-ProductoBase", "pk": "ID-Unico" },
+          { "tabla": "Tabla-Packing-Productos", "pk": "ID-Unico" }
+        ]
+      }
+    ]
+  },
+
+  "ordenAutogenerado": {
+    "descripcion": "Columnas Orden que se generan incrementalmente: último valor + 1 (1, 2, 3, ...).",
+    "columnas": [
+      { "tabla": "Tabla-Costo-Productos", "columna": "Orden" },
+      { "tabla": "Tabla-Costos-ProductoUnitario", "columna": "Orden" },
+      { "tabla": "Listado-Productos-Elaborados", "columna": "Orden-Lista" }
+    ]
+  },
+
+  "listasValores": {
+    "descripcion": "Valores seleccionables al crear/editar; origen hoja COMPONENTE-COMBOS (datos de migración).",
+    "hojaOrigen": "COMPONENTE-COMBOS",
+    "columnasOrigen": [
+      { "columna": "Combo-Tipo-Productos", "uso": "Categoria en tablas con campo Categoria" },
+      { "columna": "Combo-Comercio-Sucursal", "uso": "Comercio-Sucursal en tablas con campo Comercio-Sucursal" }
+    ],
+    "vinculos": [
+      { "tabla": "Tabla-Costo-Productos", "campo": "Categoria", "hoja": "COMPONENTE-COMBOS", "columnaOrigen": "Combo-Tipo-Productos" },
+      { "tabla": "Tabla-Costo-Productos-Compuesto-ProductoBase", "campo": "Comercio-Sucursal", "hoja": "COMPONENTE-COMBOS", "columnaOrigen": "Combo-Comercio-Sucursal" },
+      { "tabla": "Tabla-Costos-ProductoUnitario", "campo": "Comercio-Sucursal", "hoja": "COMPONENTE-COMBOS", "columnaOrigen": "Combo-Comercio-Sucursal" },
+      { "tabla": "Listado-Productos-Elaborados", "campo": "Comercio-Sucursal", "hoja": "COMPONENTE-COMBOS", "columnaOrigen": "Combo-Comercio-Sucursal" }
+    ]
+  },
+
+  "navegacion": {
+    "descripcion": "Orden del menú y flujo de pantallas: maestras, detalle y listados. Define paso a paso el diseño de páginas y cómo se relacionan.",
+    "ordenMenu": [
+      {
+        "id": "insumos",
+        "titulo": "Insumos",
+        "orden": 1,
+        "tablas": [
+          { "tabla": "Tabla-Insumo-Materia-Prima", "tituloPantalla": "Materia prima", "tipo": "maestra", "abm": "listado-alta-edicion" },
+          { "tabla": "Tabla-Insumo-Packing", "tituloPantalla": "Packing", "tipo": "maestra", "abm": "listado-alta-edicion" }
+        ]
+      },
+      {
+        "id": "recetas",
+        "titulo": "Recetas",
+        "orden": 2,
+        "tablas": [
+          {
+            "tabla": "Tabla-Receta-Base",
+            "tituloPantalla": "Receta base",
+            "tipo": "maestra",
+            "abm": "listado-alta-edicion",
+            "detalles": [
+              { "tabla": "Tabla-Receta-Base-Detalle", "tituloPantalla": "Detalle receta", "vinculo": "IDReceta-Base" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "elaboracion",
+        "titulo": "Elaboración",
+        "orden": 3,
+        "tablas": [
+          {
+            "tabla": "Tabla-Elaboracion-ProductosBase",
+            "tituloPantalla": "Elaboración productos base",
+            "tipo": "maestra",
+            "abm": "listado-alta",
+            "vinculoDesde": "IDReceta-Base"
+          }
+        ]
+      },
+      {
+        "id": "productos-unitarios",
+        "titulo": "Productos unitarios",
+        "orden": 4,
+        "tablas": [
+          {
+            "tabla": "Tabla-Costos-ProductoUnitario",
+            "tituloPantalla": "Costos producto unitario",
+            "tipo": "maestra",
+            "abm": "listado-alta-edicion",
+            "vinculoDesde": "IDElaboracion-ProductoBase",
+            "detalles": [
+              { "tabla": "Tabla-Receta-Relleno-Detalle", "tituloPantalla": "Relleno", "vinculo": "IDCosto-ProductoUnitario" },
+              { "tabla": "Tabla-Receta-Decoracion-Detalle", "tituloPantalla": "Decoración", "vinculo": "IDCosto-ProductoUnitario" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "productos",
+        "titulo": "Productos",
+        "orden": 5,
+        "tablas": [
+          {
+            "tabla": "Tabla-Costo-Productos",
+            "tituloPantalla": "Costo productos",
+            "tipo": "maestra",
+            "abm": "listado-alta-edicion",
+            "detalles": [
+              { "tabla": "Tabla-Costo-Productos-Compuesto-ProductoBase", "tituloPantalla": "Compuesto producto base", "vinculo": "IDCosto-Producto" },
+              {
+                "tabla": "Tabla-Packing",
+                "tituloPantalla": "Packing",
+                "vinculo": "IDCosto-Producto",
+                "detalleAnidado": { "tabla": "Tabla-Packing-Detalle", "tituloPantalla": "Detalle packing", "vinculo": "IDPacking" }
+              },
+              { "tabla": "Tabla-Packing-Productos", "tituloPantalla": "Packing productos", "vinculo": "IDCosto-Producto" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "listado",
+        "titulo": "Listado",
+        "orden": 6,
+        "tablas": [
+          {
+            "tabla": "Listado-Productos-Elaborados",
+            "tituloPantalla": "Productos elaborados",
+            "tipo": "listado",
+            "abm": "listado-alta-edicion"
+          }
+        ]
+      }
+    ],
+    "flujo": [
+      { "paso": 1, "accion": "Insumos: cargar Materia prima y Packing (ABM independiente)" },
+      { "paso": 2, "accion": "Recetas: crear Receta base y luego cargar Detalle receta (por IDReceta-Base)" },
+      { "paso": 3, "accion": "Elaboración: crear Elaboración productos base eligiendo IDReceta-Base" },
+      { "paso": 4, "accion": "Productos unitarios: crear Costos producto unitario eligiendo IDElaboracion-ProductoBase; dentro, cargar Relleno y Decoración (por IDCosto-ProductoUnitario)" },
+      { "paso": 5, "accion": "Productos: crear Costo productos; dentro, agregar Compuesto producto base (IDCosto-Producto + IDCosto-ProductoUnitario), Packing y Packing-Productos" },
+      { "paso": 6, "accion": "Listado: consultar o mantener Listado productos elaborados" }
+    ]
+  },
+
+  "tablas": {
+    "Listado-Productos-Elaborados": {
+      "sheetName": "Listado-Productos-Elaborados",
+      "pk": ["IDProducto"],
+      "fk": [],
+      "columnas": [
+        { "nombre": "Orden-Lista", "tipo": "numeric", "nullable": true, "autogeneradoOrden": true },
+        { "nombre": "IDProducto", "tipo": "text", "nullable": false },
+        { "nombre": "Comercio-Sucursal", "tipo": "text", "nullable": true, "listadoValores": "COMPONENTE-COMBOS.Combo-Comercio-Sucursal" },
+        { "nombre": "Nombre-Producto", "tipo": "text", "nullable": true },
+        { "nombre": "Costo-Producto-Final-Actual", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Observaciones", "tipo": "text", "nullable": true },
+        { "nombre": "Habilitado", "tipo": "text", "nullable": true }
+      ],
+      "indices": [
+        { "columnas": ["IDProducto"], "unico": true },
+        { "columnas": ["Orden-Lista"] },
+        { "columnas": ["Comercio-Sucursal"] }
+      ]
+    },
+    "Tabla-Costo-Productos": {
+      "sheetName": "Tabla-Costo-Productos",
+      "pk": ["IDCosto-Producto"],
+      "fk": [],
+      "columnas": [
+        { "nombre": "Orden", "tipo": "numeric", "nullable": true, "autogeneradoOrden": true },
+        { "nombre": "IDCosto-Producto", "tipo": "text", "nullable": false },
+        { "nombre": "Categoria", "tipo": "text", "nullable": true, "listadoValores": "COMPONENTE-COMBOS.Combo-Tipo-Productos" },
+        { "nombre": "Producto", "tipo": "text", "nullable": true },
+        { "nombre": "Costo-Producto-Maestro-Total", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Costo-Packing", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Costos-Fijos", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Merma-Porcentaje", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Merma-Importe", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Tiiempo-Packing-Minutos", "tipo": "numeric", "nullable": true },
+        { "nombre": "Costo-Mano-Obra-Packing", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Costo-Producto-Final-Actual", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Costo-Producto-Final-Anterior", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Habilitado", "tipo": "text", "nullable": true }
+      ],
+      "indices": [
+        { "columnas": ["IDCosto-Producto"], "unico": true },
+        { "columnas": ["Categoria"] }
+      ]
+    },
+    "Tabla-Costo-Productos-Compuesto-ProductoBase": {
+      "sheetName": "Tabla-Costo-Productos-Compuesto-ProductoBase",
+      "pk": ["ID-Unico"],
+      "fk": [
+        { "columnas": ["IDCosto-Producto"], "referencia": "Tabla-Costo-Productos", "refColumnas": ["IDCosto-Producto"] },
+        { "columnas": ["IDCosto-ProductoUnitario"], "referencia": "Tabla-Costos-ProductoUnitario", "refColumnas": ["IDCosto-ProductoUnitario"] }
+      ],
+      "columnas": [
+        { "nombre": "ID-Unico", "tipo": "text", "nullable": false },
+        { "nombre": "IDCosto-Producto", "tipo": "text", "nullable": false },
+        { "nombre": "IDCosto-ProductoUnitario", "tipo": "text", "nullable": false },
+        { "nombre": "Comercio-Sucursal", "tipo": "text", "nullable": true, "listadoValores": "COMPONENTE-COMBOS.Combo-Comercio-Sucursal" },
+        { "nombre": "Cantidad", "tipo": "numeric", "nullable": true },
+        { "nombre": "Producto-Unitario-Base", "tipo": "text", "nullable": true },
+        { "nombre": "Costo-Elaboracion-Actual-Base", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Costo-Producto-Maestro-Total", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Fecha-Registro-Actualizado-Al", "tipo": "datetime", "nullable": true },
+        { "nombre": "Actualizado", "tipo": "text", "nullable": true }
+      ],
+      "indices": [
+        { "columnas": ["ID-Unico"], "unico": true },
+        { "columnas": ["IDCosto-Producto"] },
+        { "columnas": ["IDCosto-ProductoUnitario"] }
+      ]
+    },
+    "Tabla-Costos-ProductoUnitario": {
+      "sheetName": "Tabla-Costos-ProductoUnitario",
+      "pk": ["IDCosto-ProductoUnitario"],
+      "fk": [
+        { "columnas": ["IDElaboracion-ProductoBase"], "referencia": "Tabla-Elaboracion-ProductosBase", "refColumnas": ["IDElaboracion-ProductoBase"] }
+      ],
+      "columnas": [
+        { "nombre": "Orden", "tipo": "numeric", "nullable": true, "autogeneradoOrden": true },
+        { "nombre": "IDCosto-ProductoUnitario", "tipo": "text", "nullable": false },
+        { "nombre": "Comercio-Sucursal", "tipo": "text", "nullable": true, "listadoValores": "COMPONENTE-COMBOS.Combo-Comercio-Sucursal" },
+        { "nombre": "Tipo-Producto", "tipo": "text", "nullable": true },
+        { "nombre": "Nombre-Producto", "tipo": "text", "nullable": true },
+        { "nombre": "IDElaboracion-ProductoBase", "tipo": "text", "nullable": true },
+        { "nombre": "Costo-Produccion-ProductoBase", "tipo": "numeric", "nullable": true, "decimales": 4 },
+        { "nombre": "Costo-Relleno-Producto", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Costo-Decoracion-Producto", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Tiiempo-Elaboracion-Minutos", "tipo": "numeric", "nullable": true },
+        { "nombre": "Costo-Mano-Obra-Elaboracion", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Costo-Elaboracion-Actual", "tipo": "numeric", "nullable": true, "decimales": 2, "nota": "G + H + I + K" },
+        { "nombre": "Costo-Elaboracion-Anterior", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Habilitado", "tipo": "text", "nullable": true },
+        { "nombre": "Fecha-Registro-Actualizado-Al", "tipo": "datetime", "nullable": true },
+        { "nombre": "Actualizado", "tipo": "text", "nullable": true }
+      ],
+      "indices": [
+        { "columnas": ["IDCosto-ProductoUnitario"], "unico": true },
+        { "columnas": ["IDElaboracion-ProductoBase"] }
+      ]
+    },
+    "Tabla-Elaboracion-ProductosBase": {
+      "sheetName": "Tabla-Elaboracion-ProductosBase",
+      "pk": ["IDElaboracion-ProductoBase"],
+      "fk": [
+        { "columnas": ["IDReceta-Base"], "referencia": "Tabla-Receta-Base", "refColumnas": ["IDReceta-Base"] }
+      ],
+      "columnas": [
+        { "nombre": "IDElaboracion-ProductoBase", "tipo": "text", "nullable": false },
+        { "nombre": "IDReceta-Base", "tipo": "text", "nullable": false },
+        { "nombre": "Cantidad", "tipo": "numeric", "nullable": true },
+        { "nombre": "Costo-Produccion-ProductoBase", "tipo": "numeric", "nullable": true, "decimales": 4 },
+        { "nombre": "Monto", "tipo": "numeric", "nullable": true, "decimales": 2 }
+      ],
+      "indices": [
+        { "columnas": ["IDElaboracion-ProductoBase"], "unico": true },
+        { "columnas": ["IDReceta-Base"] }
+      ]
+    },
+    "Tabla-Receta-Base": {
+      "sheetName": "Tabla-Receta-Base",
+      "pk": ["IDReceta-Base"],
+      "fk": [],
+      "columnas": [
+        { "nombre": "IDReceta-Base", "tipo": "text", "nullable": false },
+        { "nombre": "Descripcion-Masa-Producto", "tipo": "text", "nullable": true },
+        { "nombre": "Costo-Directo-Receta", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Tiempo-Produccion-Minutos", "tipo": "numeric", "nullable": true },
+        { "nombre": "Costo-Mano-Obra-Produccion", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Costo-Produccion", "tipo": "numeric", "nullable": true, "decimales": 2, "alias": "Costo-Produccion[C+E]" },
+        { "nombre": "Rendimiento-Cantidad", "tipo": "numeric", "nullable": true },
+        { "nombre": "Rendimiento-UnidadMedida", "tipo": "text", "nullable": true },
+        { "nombre": "Costo-Produccion-ProductoBase", "tipo": "numeric", "nullable": true, "decimales": 4, "alias": "Costo-Produccion-ProductoBase [F/G]" }
+      ],
+      "indices": [
+        { "columnas": ["IDReceta-Base"], "unico": true }
+      ]
+    },
+    "Tabla-Receta-Base-Detalle": {
+      "sheetName": "Tabla-Receta-Base-Detalle",
+      "pk": ["IDReceta-Base-Detalle"],
+      "fk": [
+        { "columnas": ["IDReceta-Base"], "referencia": "Tabla-Receta-Base", "refColumnas": ["IDReceta-Base"] },
+        { "columnas": ["IDInsumo-MateriaPrima"], "referencia": "Tabla-Insumo-Materia-Prima", "refColumnas": ["IDInsumo-MateriaPrima"] }
+      ],
+      "columnas": [
+        { "nombre": "IDReceta-Base-Detalle", "tipo": "text", "nullable": false },
+        { "nombre": "IDReceta-Base", "tipo": "text", "nullable": false },
+        { "nombre": "IDInsumo-MateriaPrima", "tipo": "text", "nullable": false },
+        { "nombre": "Nombre-Insumo", "tipo": "text", "nullable": true },
+        { "nombre": "Cantidad", "tipo": "numeric", "nullable": true, "decimales": 4 },
+        { "nombre": "Unidad-Medida", "tipo": "text", "nullable": true },
+        { "nombre": "Precio-Equivalencia-x-Unidad", "tipo": "numeric", "nullable": true, "decimales": 4 },
+        { "nombre": "Importe", "tipo": "numeric", "nullable": true, "decimales": 2 }
+      ],
+      "indices": [
+        { "columnas": ["IDReceta-Base-Detalle"], "unico": true },
+        { "columnas": ["IDReceta-Base"] },
+        { "columnas": ["IDInsumo-MateriaPrima"] }
+      ]
+    },
+    "Tabla-Receta-Relleno-Detalle": {
+      "sheetName": "Tabla-Receta-Relleno-Detalle",
+      "pk": ["IDReceta-Relleno"],
+      "fk": [
+        { "columnas": ["IDCosto-ProductoUnitario"], "referencia": "Tabla-Costos-ProductoUnitario", "refColumnas": ["IDCosto-ProductoUnitario"] },
+        { "columnas": ["IDInsumo-MateriaPrima"], "referencia": "Tabla-Insumo-Materia-Prima", "refColumnas": ["IDInsumo-MateriaPrima"] }
+      ],
+      "columnas": [
+        { "nombre": "IDReceta-Relleno", "tipo": "text", "nullable": false },
+        { "nombre": "IDCosto-ProductoUnitario", "tipo": "text", "nullable": false },
+        { "nombre": "IDInsumo-MateriaPrima", "tipo": "text", "nullable": false },
+        { "nombre": "Nombre-Insumo", "tipo": "text", "nullable": true },
+        { "nombre": "Cantidad", "tipo": "numeric", "nullable": true, "decimales": 4 },
+        { "nombre": "Unidad-Medida", "tipo": "text", "nullable": true },
+        { "nombre": "Precio-Equivalencia-x-Unidad", "tipo": "numeric", "nullable": true, "decimales": 4 },
+        { "nombre": "Importe", "tipo": "numeric", "nullable": true, "decimales": 2 }
+      ],
+      "indices": [
+        { "columnas": ["IDReceta-Relleno"], "unico": true },
+        { "columnas": ["IDCosto-ProductoUnitario"] },
+        { "columnas": ["IDInsumo-MateriaPrima"] }
+      ]
+    },
+    "Tabla-Receta-Decoracion-Detalle": {
+      "sheetName": "Tabla-Receta-Decoracion-Detalle",
+      "pk": ["IDReceta-Decoracion"],
+      "fk": [
+        { "columnas": ["IDCosto-ProductoUnitario"], "referencia": "Tabla-Costos-ProductoUnitario", "refColumnas": ["IDCosto-ProductoUnitario"] },
+        { "columnas": ["IDInsumo-MateriaPrima"], "referencia": "Tabla-Insumo-Materia-Prima", "refColumnas": ["IDInsumo-MateriaPrima"] }
+      ],
+      "columnas": [
+        { "nombre": "IDReceta-Decoracion", "tipo": "text", "nullable": false },
+        { "nombre": "IDProducto-Unitario-Base", "tipo": "text", "nullable": true, "nota": "FK lógica IDCosto-ProductoUnitario" },
+        { "nombre": "IDInsumo-MateriaPrima", "tipo": "text", "nullable": false },
+        { "nombre": "Nombre-Insumo", "tipo": "text", "nullable": true },
+        { "nombre": "Cantidad", "tipo": "numeric", "nullable": true, "decimales": 4 },
+        { "nombre": "Unidad-Medida", "tipo": "text", "nullable": true },
+        { "nombre": "Precio-Equivalencia-x-Unidad", "tipo": "numeric", "nullable": true, "decimales": 4 },
+        { "nombre": "Importe", "tipo": "numeric", "nullable": true, "decimales": 2 }
+      ],
+      "indices": [
+        { "columnas": ["IDReceta-Decoracion"], "unico": true },
+        { "columnas": ["IDCosto-ProductoUnitario"] },
+        { "columnas": ["IDInsumo-MateriaPrima"] }
+      ]
+    },
+    "Tabla-Packing-Productos": {
+      "sheetName": "Tabla-Packing-Productos",
+      "pk": ["ID-Unico"],
+      "fk": [
+        { "columnas": ["IDCosto-Producto"], "referencia": "Tabla-Costo-Productos", "refColumnas": ["IDCosto-Producto"] },
+        { "columnas": ["IDPacking"], "referencia": "Tabla-Packing", "refColumnas": ["IDPacking"] }
+      ],
+      "columnas": [
+        { "nombre": "ID-Unico", "tipo": "text", "nullable": false },
+        { "nombre": "IDCosto-Producto", "tipo": "text", "nullable": false },
+        { "nombre": "IDPacking", "tipo": "text", "nullable": false },
+        { "nombre": "Descripcion", "tipo": "text", "nullable": true },
+        { "nombre": "Monto", "tipo": "numeric", "nullable": true, "decimales": 2 }
+      ],
+      "indices": [
+        { "columnas": ["ID-Unico"], "unico": true },
+        { "columnas": ["IDCosto-Producto"] },
+        { "columnas": ["IDPacking"] }
+      ]
+    },
+    "Tabla-Packing": {
+      "sheetName": "Tabla-Packing",
+      "pk": ["IDPacking"],
+      "fk": [
+        { "columnas": ["IDCosto-Producto"], "referencia": "Tabla-Costo-Productos", "refColumnas": ["IDCosto-Producto"] }
+      ],
+      "columnas": [
+        { "nombre": "IDPacking", "tipo": "text", "nullable": false },
+        { "nombre": "IDCosto-Producto", "tipo": "text", "nullable": true },
+        { "nombre": "Descripcion", "tipo": "text", "nullable": true }
+      ],
+      "indices": [
+        { "columnas": ["IDPacking"], "unico": true },
+        { "columnas": ["IDCosto-Producto"] }
+      ],
+      "nota": "Si en el Sheet esta hoja tiene columnas de insumos, corresponden a Tabla-Packing-Detalle."
+    },
+    "Tabla-Packing-Detalle": {
+      "sheetName": "Tabla-Packing-Detalle",
+      "pk": ["IDPacking-Detalle"],
+      "fk": [
+        { "columnas": ["IDPacking"], "referencia": "Tabla-Packing", "refColumnas": ["IDPacking"] },
+        { "columnas": ["IDInsumo-Packing"], "referencia": "Tabla-Insumo-Packing", "refColumnas": ["IDInsumo-Packing"] }
+      ],
+      "columnas": [
+        { "nombre": "IDPacking-Detalle", "tipo": "text", "nullable": false },
+        { "nombre": "IDPacking", "tipo": "text", "nullable": false },
+        { "nombre": "IDInsumo-Packing", "tipo": "text", "nullable": false },
+        { "nombre": "Nombre-Insumo", "tipo": "text", "nullable": true },
+        { "nombre": "Cantidad", "tipo": "numeric", "nullable": true },
+        { "nombre": "Unidad-Medida-Equivalencia", "tipo": "text", "nullable": true },
+        { "nombre": "Precio-Equivalencia-x-Unidad", "tipo": "numeric", "nullable": true, "decimales": 4 },
+        { "nombre": "Importe", "tipo": "numeric", "nullable": true, "decimales": 2 }
+      ],
+      "indices": [
+        { "columnas": ["IDPacking-Detalle"], "unico": true },
+        { "columnas": ["IDPacking"] },
+        { "columnas": ["IDInsumo-Packing"] }
+      ]
+    },
+    "Tabla-Insumo-Materia-Prima": {
+      "sheetName": "Tabla-Insumo-Materia-Prima",
+      "pk": ["IDInsumo-MateriaPrima"],
+      "fk": [],
+      "columnas": [
+        { "nombre": "IDInsumo-MateriaPrima", "tipo": "text", "nullable": false },
+        { "nombre": "Categoria", "tipo": "text", "nullable": true },
+        { "nombre": "Nombre-Producto", "tipo": "text", "nullable": true },
+        { "nombre": "Presentacion-Tipo", "tipo": "text", "nullable": true },
+        { "nombre": "Presentacion-Cantidad-Medida", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Presentacion-Unidad", "tipo": "text", "nullable": true },
+        { "nombre": "Precio-Actual", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Precio-Anterior", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Observaciones", "tipo": "text", "nullable": true },
+        { "nombre": "Cantidad-Unidad-Medida", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Tipo-Unidad-Medida", "tipo": "text", "nullable": true },
+        { "nombre": "Equivalencia-Unidad-Medida", "tipo": "numeric", "nullable": true, "decimales": 4 },
+        { "nombre": "Equivalencia-Tipo-Unidad-Medida", "tipo": "text", "nullable": true },
+        { "nombre": "Habilitado", "tipo": "text", "nullable": true },
+        { "nombre": "Precio-Costo-x-Unidad", "tipo": "numeric", "nullable": true, "decimales": 4 },
+        { "nombre": "Precio-Equivalencia-x-Unidad", "tipo": "numeric", "nullable": true, "decimales": 4 },
+        { "nombre": "Fecha-Actualizada-Al", "tipo": "datetime", "nullable": true },
+        { "nombre": "Marca", "tipo": "text", "nullable": true },
+        { "nombre": "Lugar", "tipo": "text", "nullable": true }
+      ],
+      "indices": [
+        { "columnas": ["IDInsumo-MateriaPrima"], "unico": true },
+        { "columnas": ["Categoria"] }
+      ]
+    },
+    "Tabla-Insumo-Packing": {
+      "sheetName": "Tabla-Insumo-Packing",
+      "pk": ["IDInsumo-Packing"],
+      "fk": [],
+      "columnas": [
+        { "nombre": "IDInsumo-Packing", "tipo": "text", "nullable": false },
+        { "nombre": "Categoria", "tipo": "text", "nullable": true },
+        { "nombre": "Nombre-Producto", "tipo": "text", "nullable": true },
+        { "nombre": "Presentacion-Tipo", "tipo": "text", "nullable": true },
+        { "nombre": "Presentacion-Cantidad-Medida", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Presentacion-Unidad", "tipo": "text", "nullable": true },
+        { "nombre": "Precio-Actual", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Precio-Anterior", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Observaciones", "tipo": "text", "nullable": true },
+        { "nombre": "Cantidad-Unidad-Medida", "tipo": "numeric", "nullable": true, "decimales": 2 },
+        { "nombre": "Tipo-Unidad-Medida", "tipo": "text", "nullable": true },
+        { "nombre": "Equivalencia-Unidad-Medida", "tipo": "numeric", "nullable": true, "decimales": 4 },
+        { "nombre": "Equivalencia-Tipo-Unidad-Medida", "tipo": "text", "nullable": true },
+        { "nombre": "Habilitado", "tipo": "text", "nullable": true },
+        { "nombre": "Precio-Costo-x-Unidad", "tipo": "numeric", "nullable": true, "decimales": 4 },
+        { "nombre": "Precio-Equivalencia-x-Unidad", "tipo": "numeric", "nullable": true, "decimales": 4 },
+        { "nombre": "Fecha-Actualizada-Al", "tipo": "datetime", "nullable": true },
+        { "nombre": "Marca", "tipo": "text", "nullable": true },
+        { "nombre": "Lugar", "tipo": "text", "nullable": true }
+      ],
+      "indices": [
+        { "columnas": ["IDInsumo-Packing"], "unico": true },
+        { "columnas": ["Categoria"] }
+      ]
+    }
+  },
+
+  "relaciones": [
+    { "padre": "Tabla-Costo-Productos", "hijo": "Tabla-Costo-Productos-Compuesto-ProductoBase", "por": "IDCosto-Producto" },
+    { "padre": "Tabla-Costos-ProductoUnitario", "hijo": "Tabla-Costo-Productos-Compuesto-ProductoBase", "por": "IDCosto-ProductoUnitario" },
+    { "padre": "Tabla-Elaboracion-ProductosBase", "hijo": "Tabla-Costos-ProductoUnitario", "por": "IDElaboracion-ProductoBase" },
+    { "padre": "Tabla-Receta-Base", "hijo": "Tabla-Elaboracion-ProductosBase", "por": "IDReceta-Base" },
+    { "padre": "Tabla-Receta-Base", "hijo": "Tabla-Receta-Base-Detalle", "por": "IDReceta-Base" },
+    { "padre": "Tabla-Insumo-Materia-Prima", "hijo": "Tabla-Receta-Base-Detalle", "por": "IDInsumo-MateriaPrima" },
+    { "padre": "Tabla-Costos-ProductoUnitario", "hijo": "Tabla-Receta-Relleno-Detalle", "por": "IDCosto-ProductoUnitario" },
+    { "padre": "Tabla-Insumo-Materia-Prima", "hijo": "Tabla-Receta-Relleno-Detalle", "por": "IDInsumo-MateriaPrima" },
+    { "padre": "Tabla-Costos-ProductoUnitario", "hijo": "Tabla-Receta-Decoracion-Detalle", "por": "IDCosto-ProductoUnitario" },
+    { "padre": "Tabla-Insumo-Materia-Prima", "hijo": "Tabla-Receta-Decoracion-Detalle", "por": "IDInsumo-MateriaPrima" },
+    { "padre": "Tabla-Costo-Productos", "hijo": "Tabla-Packing-Productos", "por": "IDCosto-Producto" },
+    { "padre": "Tabla-Packing", "hijo": "Tabla-Packing-Productos", "por": "IDPacking" },
+    { "padre": "Tabla-Costo-Productos", "hijo": "Tabla-Packing", "por": "IDCosto-Producto" },
+    { "padre": "Tabla-Packing", "hijo": "Tabla-Packing-Detalle", "por": "IDPacking" },
+    { "padre": "Tabla-Insumo-Packing", "hijo": "Tabla-Packing-Detalle", "por": "IDInsumo-Packing" }
+  ],
+
+  "formulas": [
+    {
+      "tabla": "Tabla-Receta-Base-Detalle",
+      "campoResultado": "Importe",
+      "expresion": "Cantidad * Precio-Equivalencia-x-Unidad",
+      "operacion": "multiplicacion",
+      "operandos": ["Cantidad", "Precio-Equivalencia-x-Unidad"],
+      "descripcion": "Importe = Cantidad × Precio-Equivalencia-x-Unidad"
+    },
+    {
+      "tabla": "Tabla-Receta-Base",
+      "campoResultado": "Costo-Produccion",
+      "alias": "Costo-Produccion[C+E]",
+      "expresion": "Costo-Directo-Receta + Costo-Mano-Obra-Produccion",
+      "operacion": "suma",
+      "operandos": ["Costo-Directo-Receta", "Costo-Mano-Obra-Produccion"],
+      "descripcion": "Costo-Produccion = Costo-Directo-Receta + Costo-Mano-Obra-Produccion"
+    },
+    {
+      "tabla": "Tabla-Receta-Base",
+      "campoResultado": "Costo-Produccion-ProductoBase",
+      "alias": "Costo-Produccion-ProductoBase [F/G]",
+      "expresion": "Costo-Produccion / Rendimiento-Cantidad",
+      "operacion": "division",
+      "operandos": ["Costo-Produccion", "Rendimiento-Cantidad"],
+      "descripcion": "Costo por unidad = Costo-Produccion / Rendimiento-Cantidad"
+    },
+    {
+      "tabla": "Tabla-Costos-ProductoUnitario",
+      "campoResultado": "Costo-Elaboracion-Actual",
+      "expresion": "Costo-Produccion-ProductoBase + Costo-Relleno-Producto + Costo-Decoracion-Producto + Costo-Mano-Obra-Elaboracion",
+      "operacion": "suma",
+      "operandos": ["Costo-Produccion-ProductoBase", "Costo-Relleno-Producto", "Costo-Decoracion-Producto", "Costo-Mano-Obra-Elaboracion"],
+      "nota": "G + H + I + K"
+    }
+  ],
+
+  "sumatorias": [
+    {
+      "tablaPadre": "Tabla-Costos-ProductoUnitario",
+      "campoPadre": "Costo-Relleno-Producto",
+      "tablaDetalle": "Tabla-Receta-Relleno-Detalle",
+      "campoDetalle": "Importe",
+      "vinculo": { "detalle": "IDCosto-ProductoUnitario", "padre": "IDCosto-ProductoUnitario" },
+      "descripcion": "Costo relleno = SUM(Importe) del detalle relleno por IDCosto-ProductoUnitario"
+    },
+    {
+      "tablaPadre": "Tabla-Receta-Base",
+      "campoPadre": "Costo-Directo-Receta",
+      "tablaDetalle": "Tabla-Receta-Base-Detalle",
+      "campoDetalle": "Importe",
+      "vinculo": { "detalle": "IDReceta-Base", "padre": "IDReceta-Base" },
+      "descripcion": "Costo directo receta = SUM(Importe) del detalle por IDReceta-Base"
+    }
+  ],
+
+  "camposReflejo": [
+    {
+      "tablaDestino": "Tabla-Receta-Base-Detalle",
+      "idRelacion": "IDInsumo-MateriaPrima",
+      "tablaOrigen": "Tabla-Insumo-Materia-Prima",
+      "idOrigen": "IDInsumo-MateriaPrima",
+      "camposPropagados": [
+        { "origen": "Nombre-Producto", "destino": "Nombre-Insumo", "actualizarSiOrigenCambia": true },
+        { "origen": "Tipo-Unidad-Medida", "destino": "Unidad-Medida", "actualizarSiOrigenCambia": true },
+        { "origen": "Precio-Equivalencia-x-Unidad", "destino": "Precio-Equivalencia-x-Unidad", "actualizarSiOrigenCambia": true }
+      ],
+      "descripcion": "Al cambiar origen, actualizar destino para que Importe y listados reflejen realidad."
+    },
+    {
+      "tablaDestino": "Tabla-Receta-Relleno-Detalle",
+      "idRelacion": "IDInsumo-MateriaPrima",
+      "tablaOrigen": "Tabla-Insumo-Materia-Prima",
+      "idOrigen": "IDInsumo-MateriaPrima",
+      "camposPropagados": [
+        { "origen": "Nombre-Producto", "destino": "Nombre-Insumo", "actualizarSiOrigenCambia": true },
+        { "origen": "Precio-Equivalencia-x-Unidad", "destino": "Precio-Equivalencia-x-Unidad", "actualizarSiOrigenCambia": true }
+      ]
+    },
+    {
+      "tablaDestino": "Tabla-Receta-Decoracion-Detalle",
+      "idRelacion": "IDInsumo-MateriaPrima",
+      "tablaOrigen": "Tabla-Insumo-Materia-Prima",
+      "idOrigen": "IDInsumo-MateriaPrima",
+      "camposPropagados": [
+        { "origen": "Nombre-Producto", "destino": "Nombre-Insumo", "actualizarSiOrigenCambia": true },
+        { "origen": "Precio-Equivalencia-x-Unidad", "destino": "Precio-Equivalencia-x-Unidad", "actualizarSiOrigenCambia": true }
+      ]
+    },
+    {
+      "tablaDestino": "Tabla-Packing-Detalle",
+      "idRelacion": "IDInsumo-Packing",
+      "tablaOrigen": "Tabla-Insumo-Packing",
+      "idOrigen": "IDInsumo-Packing",
+      "camposPropagados": [
+        { "origen": "Nombre-Producto", "destino": "Nombre-Insumo", "actualizarSiOrigenCambia": true },
+        { "origen": "Precio-Equivalencia-x-Unidad", "destino": "Precio-Equivalencia-x-Unidad", "actualizarSiOrigenCambia": true }
+      ]
+    }
+  ]
+}

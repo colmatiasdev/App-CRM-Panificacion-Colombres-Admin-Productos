@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar costo producto – Armador de Productos</title>
+    <link rel="stylesheet" href="../armador-layout.css">
+    <link rel="stylesheet" href="costo-productos.css">
+</head>
+<body class="armador-page">
+    <header class="armador-page-header">
+        <a href="costo-productos.html" class="armador-page-back">← Costo productos</a>
+        <h1 class="armador-page-title">Editar costo producto</h1>
+    </header>
+    <main class="armador-page-main">
+        <div id="armador-msg" class="armador-msg" style="display: none;"></div>
+        <div id="armador-loading" class="armador-loading">Cargando…</div>
+        <form id="form-cp" class="armador-form" style="display: none;">
+            <div class="armador-form-group">
+                <label>ID</label>
+                <input type="text" id="IDCosto-Producto" name="IDCosto-Producto" readonly disabled>
+            </div>
+            <div class="armador-form-group">
+                <label for="Categoria">Categoría</label>
+                <select id="Categoria" name="Categoria"></select>
+            </div>
+            <div class="armador-form-group">
+                <label for="Producto">Producto</label>
+                <input type="text" id="Producto" name="Producto">
+            </div>
+            <div class="armador-form-group">
+                <label for="Costo-Producto-Maestro-Total">Costo producto maestro total</label>
+                <input type="number" id="Costo-Producto-Maestro-Total" name="Costo-Producto-Maestro-Total" step="0.01">
+            </div>
+            <div class="armador-form-group">
+                <label for="Costo-Packing">Costo packing</label>
+                <input type="number" id="Costo-Packing" name="Costo-Packing" step="0.01">
+            </div>
+            <div class="armador-form-group">
+                <label for="Habilitado">Habilitado</label>
+                <select id="Habilitado" name="Habilitado">
+                    <option value="">—</option>
+                    <option value="SI">Sí</option>
+                    <option value="NO">No</option>
+                </select>
+            </div>
+            <div class="armador-form-actions">
+                <button type="submit" class="armador-btn armador-btn-primary">Guardar</button>
+                <a href="costo-productos.html" class="armador-btn armador-btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </main>
+    <script src="../../Configuracion/config.js"></script>
+    <script src="../armador-api.js"></script>
+    <script src="costo-productos-edit.js"></script>
+</body>
+</html>

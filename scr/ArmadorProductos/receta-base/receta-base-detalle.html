@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle receta – Armador de Productos</title>
+    <link rel="stylesheet" href="../armador-layout.css">
+    <link rel="stylesheet" href="receta-base.css">
+</head>
+<body class="armador-page">
+    <header class="armador-page-header">
+        <a href="receta-base.html" class="armador-page-back">← Receta base</a>
+        <h1 class="armador-page-title">Detalle receta</h1>
+        <div class="armador-page-actions">
+            <a href="#" id="btn-nueva-linea" class="armador-btn armador-btn-primary">Nueva línea</a>
+        </div>
+    </header>
+    <main class="armador-page-main">
+        <div id="armador-msg" class="armador-msg" style="display: none;"></div>
+        <div id="armador-loading" class="armador-loading">Cargando…</div>
+        <p id="receta-id-label" class="armador-muted" style="margin-bottom: 1rem;"></p>
+        <div id="armador-table-wrap" class="armador-table-wrap" style="display: none;">
+            <table class="armador-table" id="tabla-detalle">
+                <thead>
+                    <tr>
+                        <th>Insumo</th>
+                        <th>Cantidad</th>
+                        <th>Unidad</th>
+                        <th>Precio equiv. x unidad</th>
+                        <th>Importe</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-detalle-body"></tbody>
+            </table>
+        </div>
+    </main>
+    <script src="../../Configuracion/config.js"></script>
+    <script src="../armador-api.js"></script>
+    <script src="receta-base-detalle.js"></script>
+</body>
+</html>

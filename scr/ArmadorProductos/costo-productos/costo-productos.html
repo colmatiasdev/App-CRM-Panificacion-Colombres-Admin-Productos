@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Costo productos – Armador de Productos</title>
+    <link rel="stylesheet" href="../armador-layout.css">
+    <link rel="stylesheet" href="costo-productos.css">
+</head>
+<body class="armador-page">
+    <header class="armador-page-header">
+        <a href="../armador-dashboard.html" class="armador-page-back">← Dashboard</a>
+        <h1 class="armador-page-title">Productos – Costo productos</h1>
+        <div class="armador-page-actions">
+            <a href="costo-productos-crear.html" class="armador-btn armador-btn-primary">Nuevo</a>
+        </div>
+    </header>
+    <main class="armador-page-main">
+        <div id="armador-msg" class="armador-msg" style="display: none;"></div>
+        <div id="armador-loading" class="armador-loading">Cargando…</div>
+        <div id="armador-table-wrap" class="armador-table-wrap" style="display: none;">
+            <table class="armador-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Categoría</th>
+                        <th>Producto</th>
+                        <th>Costo producto maestro total</th>
+                        <th>Costo packing</th>
+                        <th>Habilitado</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-body"></tbody>
+            </table>
+        </div>
+    </main>
+    <script src="../../Configuracion/config.js"></script>
+    <script src="../armador-api.js"></script>
+    <script src="costo-productos.js"></script>
+</body>
+</html>

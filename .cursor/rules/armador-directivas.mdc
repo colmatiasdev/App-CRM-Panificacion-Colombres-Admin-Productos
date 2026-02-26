@@ -1,0 +1,6 @@
+---
+description: Módulo ArmadorProductos – aplicar directivas antes de crear o modificar
+globs: scr/ArmadorProductos/**/*
+---
+
+Antes de crear o modificar el módulo ArmadorProductos (scr/ArmadorProductos/), leer y aplicar las directivas en scr/Arquitectura/DIRECTIVAS.md.

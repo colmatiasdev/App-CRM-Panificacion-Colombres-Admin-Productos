@@ -1,0 +1,188 @@
+/* Layout compartido para listados y formularios ArmadorProductos (tema claro) */
+.armador-page {
+  min-height: 100vh;
+  background: #f1f5f9;
+  color: #334155;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+.armador-page-header {
+  background: #ffffff;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.armador-page-back {
+  color: #0891b2;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.armador-page-back:hover {
+  text-decoration: underline;
+  color: #0e7490;
+}
+
+.armador-page-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0891b2;
+}
+
+.armador-page-actions {
+  margin-left: auto;
+}
+
+.armador-page-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.armador-table-wrap {
+  overflow-x: auto;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.armador-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.armador-table th,
+.armador-table td {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.armador-table th {
+  background: #f0fdfa;
+  color: #0f766e;
+  font-weight: 600;
+}
+
+.armador-table tr:hover td {
+  background: #f8fafc;
+}
+
+.armador-btn {
+  display: inline-block;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  font-family: inherit;
+}
+
+.armador-btn-primary {
+  background: #0891b2;
+  color: #ffffff;
+}
+
+.armador-btn-primary:hover {
+  background: #0e7490;
+}
+
+.armador-btn-secondary {
+  background: transparent;
+  color: #0891b2;
+  border: 1px solid #0891b2;
+}
+
+.armador-btn-secondary:hover {
+  background: #f0fdfa;
+}
+
+.armador-form {
+  max-width: 640px;
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.armador-form-group {
+  margin-bottom: 1rem;
+}
+
+.armador-form-group label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.armador-form-group input,
+.armador-form-group select,
+.armador-form-group textarea {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.95rem;
+}
+
+.armador-form-group input:focus,
+.armador-form-group select:focus,
+.armador-form-group textarea:focus {
+  outline: none;
+  border-color: #0891b2;
+  box-shadow: 0 0 0 2px rgba(8, 145, 178, 0.2);
+}
+
+.armador-form-group input:disabled,
+.armador-form-group input[readonly] {
+  background: #f8fafc;
+  color: #64748b;
+}
+
+.armador-form-actions {
+  margin-top: 1.25rem;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.armador-msg {
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.armador-msg.error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+.armador-msg.success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+}
+
+.armador-loading {
+  color: #64748b;
+  padding: 1rem;
+}
+
+.armador-muted {
+  color: #64748b;
+  font-size: 0.9rem;
+}

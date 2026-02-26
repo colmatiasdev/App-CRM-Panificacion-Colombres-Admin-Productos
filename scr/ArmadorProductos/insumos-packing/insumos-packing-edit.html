@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar insumo packing – Armador de Productos</title>
+    <link rel="stylesheet" href="../armador-layout.css">
+    <link rel="stylesheet" href="insumos-packing.css">
+</head>
+<body class="armador-page">
+    <header class="armador-page-header">
+        <a href="insumos-packing.html" class="armador-page-back">← Packing</a>
+        <h1 class="armador-page-title">Editar insumo packing</h1>
+    </header>
+    <main class="armador-page-main">
+        <div id="armador-msg" class="armador-msg" style="display: none;"></div>
+        <div id="armador-loading" class="armador-loading">Cargando…</div>
+        <form id="form-packing" class="armador-form" style="display: none;">
+            <div class="armador-form-group">
+                <label>ID</label>
+                <input type="text" id="IDInsumo-Packing" name="IDInsumo-Packing" readonly disabled>
+            </div>
+            <div class="armador-form-group">
+                <label for="Categoria">Categoría</label>
+                <input type="text" id="Categoria" name="Categoria">
+            </div>
+            <div class="armador-form-group">
+                <label for="Nombre-Producto">Nombre producto</label>
+                <input type="text" id="Nombre-Producto" name="Nombre-Producto" required>
+            </div>
+            <div class="armador-form-group">
+                <label for="Presentacion-Tipo">Presentación tipo</label>
+                <input type="text" id="Presentacion-Tipo" name="Presentacion-Tipo">
+            </div>
+            <div class="armador-form-group">
+                <label for="Presentacion-Cantidad-Medida">Presentación cantidad medida</label>
+                <input type="number" id="Presentacion-Cantidad-Medida" name="Presentacion-Cantidad-Medida" step="0.01">
+            </div>
+            <div class="armador-form-group">
+                <label for="Presentacion-Unidad">Presentación unidad</label>
+                <input type="text" id="Presentacion-Unidad" name="Presentacion-Unidad">
+            </div>
+            <div class="armador-form-group">
+                <label for="Precio-Actual">Precio actual</label>
+                <input type="number" id="Precio-Actual" name="Precio-Actual" step="0.01">
+            </div>
+            <div class="armador-form-group">
+                <label for="Habilitado">Habilitado</label>
+                <select id="Habilitado" name="Habilitado">
+                    <option value="">—</option>
+                    <option value="SI">Sí</option>
+                    <option value="NO">No</option>
+                </select>
+            </div>
+            <div class="armador-form-group">
+                <label for="Observaciones">Observaciones</label>
+                <textarea id="Observaciones" name="Observaciones" rows="2"></textarea>
+            </div>
+            <div class="armador-form-actions">
+                <button type="submit" class="armador-btn armador-btn-primary">Guardar</button>
+                <a href="insumos-packing.html" class="armador-btn armador-btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </main>
+    <script src="../../Configuracion/config.js"></script>
+    <script src="../armador-api.js"></script>
+    <script src="insumos-packing-edit.js"></script>
+</body>
+</html>

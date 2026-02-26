@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo costo producto unitario – Armador de Productos</title>
+    <link rel="stylesheet" href="../armador-layout.css">
+    <link rel="stylesheet" href="costos-producto-unitario.css">
+</head>
+<body class="armador-page">
+    <header class="armador-page-header">
+        <a href="costos-producto-unitario.html" class="armador-page-back">← Costos producto unitario</a>
+        <h1 class="armador-page-title">Nuevo costo producto unitario</h1>
+    </header>
+    <main class="armador-page-main">
+        <div id="armador-msg" class="armador-msg" style="display: none;"></div>
+        <form id="form-cpu" class="armador-form">
+            <div class="armador-form-group">
+                <label for="IDElaboracion-ProductoBase">Elaboración producto base</label>
+                <select id="IDElaboracion-ProductoBase" name="IDElaboracion-ProductoBase"></select>
+            </div>
+            <div class="armador-form-group">
+                <label for="Comercio-Sucursal">Comercio sucursal</label>
+                <select id="Comercio-Sucursal" name="Comercio-Sucursal"></select>
+            </div>
+            <div class="armador-form-group">
+                <label for="Nombre-Producto">Nombre producto</label>
+                <input type="text" id="Nombre-Producto" name="Nombre-Producto">
+            </div>
+            <div class="armador-form-group">
+                <label for="Tipo-Producto">Tipo producto</label>
+                <input type="text" id="Tipo-Producto" name="Tipo-Producto">
+            </div>
+            <div class="armador-form-group">
+                <label for="Habilitado">Habilitado</label>
+                <select id="Habilitado" name="Habilitado">
+                    <option value="">—</option>
+                    <option value="SI" selected>Sí</option>
+                    <option value="NO">No</option>
+                </select>
+            </div>
+            <div class="armador-form-actions">
+                <button type="submit" class="armador-btn armador-btn-primary">Guardar</button>
+                <a href="costos-producto-unitario.html" class="armador-btn armador-btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </main>
+    <script src="../../Configuracion/config.js"></script>
+    <script src="../armador-api.js"></script>
+    <script src="costos-producto-unitario-crear.js"></script>
+</body>
+</html>

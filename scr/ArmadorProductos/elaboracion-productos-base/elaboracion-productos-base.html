@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elaboración productos base – Armador de Productos</title>
+    <link rel="stylesheet" href="../armador-layout.css">
+    <link rel="stylesheet" href="elaboracion-productos-base.css">
+</head>
+<body class="armador-page">
+    <header class="armador-page-header">
+        <a href="../armador-dashboard.html" class="armador-page-back">← Dashboard</a>
+        <h1 class="armador-page-title">Elaboración – Productos base</h1>
+        <div class="armador-page-actions">
+            <a href="elaboracion-productos-base-crear.html" class="armador-btn armador-btn-primary">Nuevo</a>
+        </div>
+    </header>
+    <main class="armador-page-main">
+        <div id="armador-msg" class="armador-msg" style="display: none;"></div>
+        <div id="armador-loading" class="armador-loading">Cargando…</div>
+        <div id="armador-table-wrap" class="armador-table-wrap" style="display: none;">
+            <table class="armador-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Receta base</th>
+                        <th>Cantidad</th>
+                        <th>Costo prod. base</th>
+                        <th>Monto</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-body"></tbody>
+            </table>
+        </div>
+    </main>
+    <script src="../../Configuracion/config.js"></script>
+    <script src="../armador-api.js"></script>
+    <script src="elaboracion-productos-base.js"></script>
+</body>
+</html>

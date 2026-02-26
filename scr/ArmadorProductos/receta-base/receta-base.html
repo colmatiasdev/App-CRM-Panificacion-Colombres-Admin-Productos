@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receta base – Armador de Productos</title>
+    <link rel="stylesheet" href="../armador-layout.css">
+    <link rel="stylesheet" href="receta-base.css">
+</head>
+<body class="armador-page">
+    <header class="armador-page-header">
+        <a href="../armador-dashboard.html" class="armador-page-back">← Dashboard</a>
+        <h1 class="armador-page-title">Recetas – Receta base</h1>
+        <div class="armador-page-actions">
+            <a href="receta-base-crear.html" class="armador-btn armador-btn-primary">Nuevo</a>
+        </div>
+    </header>
+    <main class="armador-page-main">
+        <div id="armador-msg" class="armador-msg" style="display: none;"></div>
+        <div id="armador-loading" class="armador-loading">Cargando…</div>
+        <div id="armador-table-wrap" class="armador-table-wrap" style="display: none;">
+            <table class="armador-table" id="tabla-receta-base">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Descripción masa</th>
+                        <th>Costo directo receta</th>
+                        <th>Rendimiento</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-receta-base-body"></tbody>
+            </table>
+        </div>
+    </main>
+    <script src="../../Configuracion/config.js"></script>
+    <script src="../armador-api.js"></script>
+    <script src="receta-base.js"></script>
+</body>
+</html>
